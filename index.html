@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional AI Assistant</title>
+    <title>ZEKI BOT - AI Assistant</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -584,9 +584,7 @@
                 padding: 6px 12px;
                 font-size: 12px;
             }
-}
-
-        
+        }
     </style>
 </head>
 <body>
@@ -594,7 +592,8 @@
         <div id="chatbot-header">
             <h3>
                 <i class="fas fa-robot"></i>
-ZEKI BOT                <span class="model-info">Gemma 3B</span>
+                ZEKI BOT
+                <span class="model-info">Gemma 3B</span>
             </h3>
             <div id="header-actions">
                 <label class="theme-switch">
@@ -614,8 +613,7 @@ ZEKI BOT                <span class="model-info">Gemma 3B</span>
                 <div class="welcome-icon">
                     <i class="fas fa-robot"></i>
                 </div>
-                <div><h3>ZEKI BOT</h3></div>
-
+                <h3>ZEKI BOT</h3>
                 <div class="welcome-title">How can I help you today?</div>
                 <div class="welcome-subtitle">Ask me anything, from creative ideas to technical explanations.</div>
                 <div class="suggestion-chips">
@@ -633,7 +631,6 @@ ZEKI BOT                <span class="model-info">Gemma 3B</span>
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
-          
         </div>
     </div>
 
@@ -647,30 +644,13 @@ ZEKI BOT                <span class="model-info">Gemma 3B</span>
             const suggestionChips = document.querySelectorAll('.suggestion-chip');
             const themeToggle = document.getElementById('theme-toggle');
             
-<<<<<<< HEAD
-            // const API_KEY = "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";
-
-            const API_KEYS = [
-  "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 ", // Replace with Key 1
-  "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", // Replace with Key 2
-  "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"  // Replace with Key 3
-];
-
-function getCurrentKey() {
-  const hour = new Date().getHours();
-  return API_KEYS[hour % API_KEYS.length];
-}
-
-
-=======
-            const API_KEY = "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";
->>>>>>> f91d3ee624a239dff65ebd33d93a98cca59f8a27
+            const API_KEY = "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";
             const MODEL = "google/gemma-3-27b-it:free";
             
             let conversationHistory = [];
             let isWaitingForResponse = false;
 
-            // Initialize theme
+            // Initialize theme from localStorage or default to light
             const currentTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', currentTheme);
             themeToggle.checked = currentTheme === 'dark';
@@ -694,7 +674,7 @@ function getCurrentKey() {
             chatbotInput.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
-                sendBtn.disabled = this.value.trim() === '' || isWaitingForResponse;
+                updateSendButtonState();
             });
 
             // Send message on button click
@@ -717,6 +697,11 @@ function getCurrentKey() {
                 });
             });
 
+            // Update send button state
+            function updateSendButtonState() {
+                sendBtn.disabled = chatbotInput.value.trim() === '' || isWaitingForResponse;
+            }
+
             function startNewChat() {
                 conversationHistory = [];
                 chatMessages.innerHTML = `
@@ -725,7 +710,6 @@ function getCurrentKey() {
                             <i class="fas fa-robot"></i>
                         </div>
                         <div class="welcome-title">How can I help you today?</div>
-                        <div><h3>ZEKI BOT</h3></div>
                         <div class="welcome-subtitle">Ask me anything, from creative ideas to technical explanations.</div>
                         <div class="suggestion-chips">
                             <button class="suggestion-chip">Explain quantum computing</button>
@@ -903,7 +887,7 @@ function getCurrentKey() {
 
             function hideTypingIndicator() {
                 isWaitingForResponse = false;
-                sendBtn.disabled = chatbotInput.value.trim() === '';
+                updateSendButtonState();
                 
                 const typingIndicator = document.getElementById('typing-indicator');
                 if (typingIndicator) {
@@ -965,10 +949,11 @@ function getCurrentKey() {
                     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                         method: "POST",
                         headers: {
-  "Authorization": `Bearer ${getCurrentKey()}`, // ✅ Rotating key
-  "HTTP-Referer": window.location.href,
-  "Content-Type": "application/json"
-},
+                            "Authorization": `Bearer ${API_KEY}`,
+                            "HTTP-Referer": window.location.href,
+                            "X-Title": "AI Chatbot",
+                            "Content-Type": "application/json"
+                        },
                         body: JSON.stringify({
                             "model": MODEL,
                             "messages": conversationHistory
@@ -992,8 +977,6 @@ function getCurrentKey() {
                 }
             }
 
-
-            
             // Initial greeting
             setTimeout(() => {
                 addBotMessage("I can help answer questions, provide information, or just chat. What would you like to talk about?");
